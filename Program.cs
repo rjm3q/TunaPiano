@@ -35,6 +35,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseHttpsRedirection();
+
 // get all artists
 
 // delete artist
@@ -56,9 +58,32 @@ if (app.Environment.IsDevelopment())
 // delete song
 
 // update song
-
+app.MapPut("/tunapiano/songs/{songId}", (TunaPianoDbContext db, int songId, song song) =>
+{
+    song songToUpdate = db.song.FirstOrDefault(s => s.Id == songId);
+    if (songToUpdate == null)
+    {
+        return Results.NotFound();
+    }
+    songToUpdate.title = song.title;
+    songToUpdate.artist_Id = song.artist_Id;
+    songToUpdate.album = song.album;
+    songToUpdate.length = song.length;
+    db.Update(songToUpdate);
+    return Results.Ok(songToUpdate);
+});
 // create new song
-
-app.UseHttpsRedirection();
-
+app.MapPost("/tunapiano/songs", (TunaPianoDbContext db, song song) =>
+{
+    try
+    {
+        db.Add(song);
+        db.SaveChanges();
+        return Results.Created($"/tunapiano/songs/{song.Id}", song);
+    }
+    catch (DbUpdateException)
+    {
+        return Results.NotFound();
+    }
+});
 app.Run();
