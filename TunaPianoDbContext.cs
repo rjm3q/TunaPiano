@@ -7,7 +7,7 @@ namespace TunaPiano
     {
         public DbSet<artist>? artist { get; set; }
         public DbSet<genere>? genere { get; set; }
-        public DbSet<song>? song { get; set; }
+        public DbSet<song>? songs { get; set; }
         public DbSet<song_genere>? song_genere { get; set; }
 
 
