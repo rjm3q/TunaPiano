@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TunaPiano;
@@ -11,9 +12,10 @@ using TunaPiano;
 namespace TunaPiano.Migrations
 {
     [DbContext(typeof(TunaPianoDbContext))]
-    partial class TunaPianoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230907010225_endpoint")]
+    partial class endpoint
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

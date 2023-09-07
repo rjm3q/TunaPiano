@@ -54,13 +54,32 @@ app.UseHttpsRedirection();
 // create new genere
 
 // get all songs
+app.MapGet("/tunapiano/songs", (TunaPianoDbContext db) =>
+{
+    List<song> song = db.songs.ToList();
+    if (song.Count > 0)
+    {
+        return Results.NotFound();
+    }
+    return Results.Ok(song);
+});
 
 // delete song
-
+app.MapDelete("/tunapiano/songs/{songId}", (TunaPianoDbContext db, int songId) =>
+{
+    song song = db.songs.FirstOrDefault(x => x.Id == songId);
+    if (song == null)
+    {
+        return Results.NotFound();
+    }
+    db.songs.Remove(song);
+    db.SaveChanges();
+    return Results.NoContent();
+});
 // update song
 app.MapPut("/tunapiano/songs/{songId}", (TunaPianoDbContext db, int songId, song song) =>
 {
-    song songToUpdate = db.song.FirstOrDefault(s => s.Id == songId);
+    song songToUpdate = db.songs.FirstOrDefault(s => s.Id == songId);
     if (songToUpdate == null)
     {
         return Results.NotFound();
