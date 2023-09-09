@@ -2,16 +2,12 @@
 
 namespace TunaPiano.Models
 {
-    public class artist
+    public class Artist
     {
-        [Required]
-        public int Id { get; set; }
-        [Required] 
-        public string? name { get; set; }
-        [Required] 
-        public int age { get; set; }
-        [Required] 
-        public string? bio { get; set; }
-        public List<song> songs { get; } = new();
+        public int ArtistId { get; set; }
+        public string? ArtistName { get; set; }
+        public int Age { get; set; }
+        public string? Bio { get; set; }
+        public List<Song> Songs { get; set; }
     }
 }

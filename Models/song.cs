@@ -2,19 +2,14 @@
 
 namespace TunaPiano.Models
 {
-    public class song
+    public class Song
     {
-        [Required]
-        public int Id { get; set; }
-        [Required] 
-        public string? title { get; set; }
-        [Required] 
-        public int artist_Id { get; set; }
-        [Required] 
-        public string? album { get; set; }
-        [Required] 
-        public int length { get; set; }
-        
-        public List<genere> genere { get; } = new();
+        public int SongId { get; set; }
+        public string? SongName { get; set; }
+        public int ArtistId { get; set; }
+        public Artist Artist { get; set; }
+        public string? AlbumName { get; set; }
+        public string? Length { get; set; }
+        public ICollection<Genre> Genres { get; set; }
     }
 }

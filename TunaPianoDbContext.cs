@@ -5,11 +5,10 @@ namespace TunaPiano
 {
     public class TunaPianoDbContext : DbContext
     {
-        public DbSet<artist>? artist { get; set; }
-        public DbSet<genere>? genere { get; set; }
-        public DbSet<song>? songs { get; set; }
-        public DbSet<song_genere>? song_genere { get; set; }
-
+        public DbSet<Artist> Artists { get; set; }
+        public DbSet<Song> Songs { get; set; }
+        public DbSet<Song_Genre> Song_Genres { get; set; }
+        public DbSet<Genre> Genres { get; set; }
 
         public TunaPianoDbContext(DbContextOptions<TunaPianoDbContext> context) : base(context)
         {
@@ -18,25 +17,40 @@ namespace TunaPiano
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            _ = modelBuilder.Entity<artist>().HasData(new artist[]
-            {
-            new artist { Id = 1, name = "Carol Quackenbush", age = 24, bio = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum" }
-            });
+            modelBuilder.Entity<Song>()
+                   .HasMany(g => g.Genres)
+                   .WithMany(s => s.Songs)
+                   .UsingEntity(sg => sg.ToTable("SongGenre"));
 
-            modelBuilder.Entity<genere>().HasData(new genere[]
-            {
-            new genere { Id = 1, description = "Rockabilly" }
-            });
+            // Seed data for artists
+            modelBuilder.Entity<Artist>().HasData(
+                new Artist { ArtistId = 1, ArtistName = "Hideki Naganuma", Age = 51, Bio = "Japanese Funk Doctor" },
+                new Artist { ArtistId = 2, ArtistName = "Daft Punk", Age = 30, Bio = "French Robots" },
+                new Artist { ArtistId = 3, ArtistName = "Static-X", Age = 30, Bio = "Wayne took a Wisconsin Death Trip" }
+            );
 
-            modelBuilder.Entity<song>().HasData(new song[]
-            {
-            new song { Id = 1, title = "Jesus hold my beer", artist_Id = 1, album = "The South shall rock again!", length = 201 }
-            });
+            // Seed data for songs
+            modelBuilder.Entity<Song>().HasData(
+                new Song { SongId = 1, SongName = "Humming the Bassline (D.S.Remix)", ArtistId = 1, AlbumName = "Jet Set Radio Future O.S.T.", Length = "4:18" },
+                new Song { SongId = 2, SongName = "One More Time", ArtistId = 2, AlbumName = "Discovery", Length = "5:20" },
+                new Song { SongId = 3, SongName = "Stay Alive", ArtistId = 3, AlbumName = "Project Restoration Vol. 2", Length = "3:55" }
+            );
 
-            modelBuilder.Entity<song_genere>().HasData(new song_genere[]
-            {
-            new song_genere { Id = 1, song_Id = 1, genere_Id = 1 }
-            });
+            // Seed data for genres
+            modelBuilder.Entity<Genre>().HasData(
+                new Genre { GenreId = 1, Description = "J-POP" },
+                new Genre { GenreId = 2, Description = "Rock" },
+                new Genre { GenreId = 3, Description = "Metal" }
+            );
+
+            // Seed data for song-genre associations
+            modelBuilder.Entity<Song_Genre>().HasData(
+                new Song_Genre { Song_GenreId = 1, SongId = 1, GenreId = 1 },
+                new Song_Genre { Song_GenreId = 2, SongId = 2, GenreId = 1 },
+                new Song_Genre { Song_GenreId = 3, SongId = 3, GenreId = 2 }
+            );
         }
+
+
     }
 }

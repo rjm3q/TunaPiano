@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TunaPiano;
@@ -11,9 +12,10 @@ using TunaPiano;
 namespace TunaPiano.Migrations
 {
     [DbContext(typeof(TunaPianoDbContext))]
-    partial class TunaPianoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230909011856_endpoint2")]
+    partial class endpoint2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,12 +29,12 @@ namespace TunaPiano.Migrations
                     b.Property<int>("genereId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("songId")
+                    b.Property<int>("songsId")
                         .HasColumnType("integer");
 
-                    b.HasKey("genereId", "songId");
+                    b.HasKey("genereId", "songsId");
 
-                    b.HasIndex("songId");
+                    b.HasIndex("songsId");
 
                     b.ToTable("generesong");
                 });
@@ -49,9 +51,11 @@ namespace TunaPiano.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("bio")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -100,6 +104,7 @@ namespace TunaPiano.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("album")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int?>("artistId")
@@ -112,6 +117,7 @@ namespace TunaPiano.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("title")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -168,23 +174,21 @@ namespace TunaPiano.Migrations
 
                     b.HasOne("TunaPiano.Models.song", null)
                         .WithMany()
-                        .HasForeignKey("songId")
+                        .HasForeignKey("songsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("TunaPiano.Models.song", b =>
                 {
-                    b.HasOne("TunaPiano.Models.artist", "artist")
-                        .WithMany("song")
+                    b.HasOne("TunaPiano.Models.artist", null)
+                        .WithMany("songs")
                         .HasForeignKey("artistId");
-
-                    b.Navigation("artist");
                 });
 
             modelBuilder.Entity("TunaPiano.Models.artist", b =>
                 {
-                    b.Navigation("song");
+                    b.Navigation("songs");
                 });
 #pragma warning restore 612, 618
         }
